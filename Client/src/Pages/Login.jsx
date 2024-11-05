@@ -1,8 +1,15 @@
+import './LoginSignup.css'
 function Login (){
     return (
-        <>
-            Login
-        </>
+        <div className="container">
+
+            <form action="">
+                <h1>Login</h1>
+                <input type="text" placeholder="username" />
+                <input type="password" placeholder="password" />
+                <button>Sign in</button>
+            </form>
+        </div>
     )
 }
 
