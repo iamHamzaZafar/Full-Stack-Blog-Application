@@ -1,0 +1,81 @@
+/* Wrapper to control width and center alignment */
+.post-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+    
+  }
+  
+  .post-container {
+    display: flex;
+    gap: 2rem;
+    padding: 1.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 800px; /* Max width on larger screens */
+    cursor: pointer;
+  }
+  
+  /* Styling the image container */
+  .post-image img {
+    width: 100%;
+    max-width: 250px; /* Larger image on larger screens */
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  /* Right side content */
+  .post-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    flex: 1;
+  }
+  
+  /* Title styling */
+  .post-title {
+    font-size: 1.8rem;
+    margin: 0;
+    color: #333;
+  }
+  
+  /* Meta information styling */
+  .post-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: #777;
+  }
+  
+  .post-author {
+    font-weight: bold;
+  }
+  
+  .post-date {
+    color: #888;
+  }
+  
+  /* Description styling */
+  .post-description {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #555;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .post-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .post-image img {
+      width: 100%;
+      max-width: 400px; /* Larger image on small screens */
+    }
+  }
+  

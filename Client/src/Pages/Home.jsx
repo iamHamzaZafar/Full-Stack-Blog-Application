@@ -1,8 +1,13 @@
+import Post from "../Components/Post";
 
 function Home (){
     return(
         <>
-            Home
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+
         </>
     );
 }
