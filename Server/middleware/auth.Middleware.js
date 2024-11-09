@@ -9,7 +9,7 @@ const isAuthenticated = async (req, res, next) => {
   }
   // token is provided now verify the token.
   try {
-    const decode = jwt.verify(token, process.env.JWT_SECRET);
+    const decode =  jwt.verify(token, process.env.JWT_SECRET);
     req.user = decode;
     next();
   } catch (error) {

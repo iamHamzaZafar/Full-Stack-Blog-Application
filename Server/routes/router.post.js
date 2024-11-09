@@ -5,7 +5,7 @@ const createPost = require('../controllers/postController')
 
 
 
-router.post('/create-post' , isAuthenticated  ) ;
+router.post('/create-post' , isAuthenticated , createPost  ) ;
 
 
 module.exports = router ;
