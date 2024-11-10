@@ -73,4 +73,11 @@ const deletePost = async (req, res) => {
   res.status(200).json({ message: "Post deletion successfull" });
 };
 
-module.exports = { createPost, deletePost };
+
+
+// controller to edit the post.
+const editPost = async (req , res)=>{
+
+}
+
+module.exports = { createPost, deletePost, editPost };
