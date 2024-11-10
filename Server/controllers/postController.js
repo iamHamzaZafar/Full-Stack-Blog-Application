@@ -1,6 +1,7 @@
 const Post = require('../models/Post.model')
 const uploadOnCloudinary = require('../utils/cloudinary.config');
 
+// controller for post creation
 const createPost = async (req , res ) =>{
     const { title, description, details } = req.body;
 
@@ -39,6 +40,14 @@ const createPost = async (req , res ) =>{
     
 }
 
+// controller for the post deletion
+const deletePost = async (req, res) => {
+  res.status(200).json({message: "Post deletion successfull"})
+}
 
 
-module.exports = createPost ;
+
+
+
+
+module.exports = {createPost , deletePost} ;

@@ -75,7 +75,6 @@ async function login(req, res) {
       { expiresIn: "1h" }
     );
 
-    console.log("token", token);
     // Respond with the token
     return res.status(200).json({
       message: "Login successful",
