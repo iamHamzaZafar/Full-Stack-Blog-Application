@@ -12,7 +12,7 @@ router.post('/create-post' , isAuthenticated, upload.single('image') , createPos
 //delete the post.
 router.delete('/delete-post/:id' , isAuthenticated , isPostOwner ,deletePost )
 // edit the post route
-router.patch('.edit-post/:id' , isAuthenticated , isPostOwner , editPost);
+router.patch('.edit-post/:id' , isAuthenticated , isPostOwner, upload.single('image') , editPost);
 //router to get all the posts from the database
 router.get('/get-posts', fetchPosts);
 // router to like the posts.

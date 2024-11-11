@@ -61,7 +61,7 @@ const deletePost = async (req, res) => {
     }
     // post found two steps 1- delete from cloudinary 2- delete from the database
     // step #1 - delete image from the cloudinary.
-    await deleteFromCloudinary(post.imageId) ;
+    await deleteFromCloudinary(post.imageId);
     // step#2 delete the post from the database.
     await Post.findByIdAndDelete(postId);
   } catch (error) {
@@ -75,37 +75,72 @@ const deletePost = async (req, res) => {
 
 
 
+
 // controller to edit the post.
-const editPost = async (req , res)=>{
-  const postId = req.params.id ;
+const editPost = async (req, res) => {
+  const { title, description, details } = req.body;
+  const postId = req.params.id;
   try {
-    const post = Post.findByIdAndUpdate(postId) ;
+    const post = Post.findById(postId);
     // condition for the post not found.
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
-    // if the post is found
+    // if the post is found check for new image
+    // If a new image is uploaded, handle the Cloudinary image update
+    if (req.file) {
+      // Delete the old image from Cloudinary
+      if (post.imagePublicId) {
+        await deleteFromCloudinary(post.imageId);
+      }
+    }
+    // upload new image to the cloudinary
+    const uploadResponse = await uploadOnCloudinary(req.file.path);
+    if (!uploadResponse) {
+      // Handle case if image upload fails
+      return res.status(500).json({ message: "Image upload failed." });
+    }
+    const imageUrl = uploadResponse.url;
+    const imagePublicId = uploadResponse.public_id;
+
+    // add new data inside the post ;
+    post.image = imageUrl;
+    post.imageId = imagePublicId;
+    post.title = title || post.title;
+    post.description = description || post.description;
+    post.details = details || post.details;
+
+    // save all the data inside the database
+    await post.save();
   } catch (error) {
-   return res.status(500).json({ message: 'Server error', error: error.message });
+    console.error("Error editing post:", error);
+    res
+      .status(500)
+      .json({ message: "Error editing post", error: error.message });
   }
-}
+};
+
+
+
 
 
 
 // controller to fetch all the posts from the db.
-const fetchPosts = async (req , res ){
+const fetchPosts = async (req, res) => {
   try {
-    const posts = await Post.find() ;
-    console.log("Post are" , posts);
+    const posts = await Post.find();
+    console.log("Post are", posts);
     // if the posts are empty.
-    if(!posts){
-      return res.status(404).json({message:"No post found in the data base"}) ;
+    if (!posts) {
+      return res
+        .status(404)
+        .json({ message: "No post found in the data base" });
     }
     // posts found return the responce.
-    return res.status(200).json({message:"success" , postsData: posts});
+    return res.status(200).json({ message: "success", postsData: posts });
   } catch (error) {
-    res.status(500).json({message:'Server error' , error: error.message});
+    res.status(500).json({ message: "Server error", error: error.message });
   }
-}
+};
 
 module.exports = { createPost, deletePost, editPost, fetchPosts };
