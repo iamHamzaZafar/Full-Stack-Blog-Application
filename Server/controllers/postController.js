@@ -1,5 +1,5 @@
 const Post = require("../models/Post.model");
-const fs = require('fs');
+const fs = require("fs");
 const { uploadOnCloudinary } = require("../utils/cloudinary.config");
 const { deleteFromCloudinary } = require("../utils/cloudinary.config");
 
@@ -74,8 +74,6 @@ const deletePost = async (req, res) => {
   res.status(200).json({ message: "Post deletion successfull" });
 };
 
-
-
 // controller to edit the post.
 const editPost = async (req, res) => {
   console.log("Req received");
@@ -107,7 +105,6 @@ const editPost = async (req, res) => {
       post.imageId = uploadResponse.public_id;
 
       // Delete the local file after uploading
-     
     }
 
     // Update other fields
@@ -121,11 +118,11 @@ const editPost = async (req, res) => {
     res.status(200).json({ message: "Post updated successfully", post });
   } catch (error) {
     console.error("Error editing post:", error);
-    res.status(500).json({ message: "Error editing post", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error editing post", error: error.message });
   }
 };
-
-
 
 // controller to fetch all the posts from the db.
 const fetchPosts = async (req, res) => {
@@ -145,10 +142,38 @@ const fetchPosts = async (req, res) => {
   }
 };
 
-
 // controller to like the post.
-const likePost = async (req , res) =>{
+const likePost = async (req, res) => {
+  const postId = req.params.id;
+  try {
+    const post = await Post.findById(postId);
+    // if post id not found.
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
 
-}
+    // post found. check user already liked the post or not.
+    if (post.likes.includes(req.user.userId)) {
+      return res
+        .status(400)
+        .json({ message: "You have already liked this post" });
+    }
 
-module.exports = { createPost, deletePost, editPost, fetchPosts , likePost };
+    // first time likng the post
+    post.likes.push(req.user.userId);
+    await post.save();
+    res
+      .status(200)
+      .json({
+        message: "Post liked successfully",
+        likesCount: post.likes.length,
+      });
+  } catch (error) {
+    console.error("Error liking post:", error);
+    res
+      .status(500)
+      .json({ message: "Error liking post", error: error.message });
+  }
+};
+
+module.exports = { createPost, deletePost, editPost, fetchPosts, likePost };

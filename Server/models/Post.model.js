@@ -29,10 +29,10 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    like_count: {
-      type: Number,
-      default: 0,
-    },
+    likes: [{
+      type: Schema.Types.ObjectId,
+      ref:"User"
+    }] // array of users id.
   },
   { timestamps: true }
 );
