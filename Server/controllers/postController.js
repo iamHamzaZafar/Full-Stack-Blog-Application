@@ -77,7 +77,35 @@ const deletePost = async (req, res) => {
 
 // controller to edit the post.
 const editPost = async (req , res)=>{
-
+  const postId = req.params.id ;
+  try {
+    const post = Post.findByIdAndUpdate(postId) ;
+    // condition for the post not found.
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    // if the post is found
+  } catch (error) {
+   return res.status(500).json({ message: 'Server error', error: error.message });
+  }
 }
 
-module.exports = { createPost, deletePost, editPost };
+
+
+// controller to fetch all the posts from the db.
+const fetchPosts = async (req , res ){
+  try {
+    const posts = await Post.find() ;
+    console.log("Post are" , posts);
+    // if the posts are empty.
+    if(!posts){
+      return res.status(404).json({message:"No post found in the data base"}) ;
+    }
+    // posts found return the responce.
+    return res.status(200).json({message:"success" , postsData: posts});
+  } catch (error) {
+    res.status(500).json({message:'Server error' , error: error.message});
+  }
+}
+
+module.exports = { createPost, deletePost, editPost, fetchPosts };
