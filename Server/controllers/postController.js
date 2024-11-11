@@ -76,7 +76,6 @@ const deletePost = async (req, res) => {
 
 
 
-
 // controller to edit the post.
 const editPost = async (req, res) => {
   console.log("Req received");
@@ -128,9 +127,6 @@ const editPost = async (req, res) => {
 
 
 
-
-
-
 // controller to fetch all the posts from the db.
 const fetchPosts = async (req, res) => {
   try {
@@ -149,4 +145,10 @@ const fetchPosts = async (req, res) => {
   }
 };
 
-module.exports = { createPost, deletePost, editPost, fetchPosts };
+
+// controller to like the post.
+const likePost = async (req , res) =>{
+
+}
+
+module.exports = { createPost, deletePost, editPost, fetchPosts , likePost };

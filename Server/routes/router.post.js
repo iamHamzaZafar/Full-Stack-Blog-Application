@@ -4,7 +4,7 @@ const isAuthenticated = require('../middleware/auth.Middleware')
 const {createPost} = require('../controllers/postController')
 const upload = require('../middleware/multer.Middleware')
 const isPostOwner = require('../middleware/isPostOwner.Middleware')
-const {deletePost, editPost , fetchPosts} = require('../controllers/postController')
+const {deletePost, editPost , fetchPosts , likePost} = require('../controllers/postController')
 
 
 // create-the post
@@ -16,7 +16,7 @@ router.patch('/edit-post/:id' , isAuthenticated , isPostOwner, upload.single('im
 //router to get all the posts from the database
 router.get('/get-posts', fetchPosts);
 // router to like the posts.
-router.post('/like-post/:id' , isAuthenticated , )
+router.post('/like-post/:id' , isAuthenticated , likePost) ;
 
 
 module.exports = router ;
