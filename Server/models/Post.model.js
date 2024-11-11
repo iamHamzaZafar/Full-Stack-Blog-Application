@@ -32,7 +32,11 @@ const postSchema = new mongoose.Schema(
     likes: [{
       type: Schema.Types.ObjectId,
       ref:"User"
-    }] // array of users id.
+    }], // array of users id.
+    comments: [{
+      type: Schema.Types.ObjectId,
+      ref:"User"
+    }]
   },
   { timestamps: true }
 );

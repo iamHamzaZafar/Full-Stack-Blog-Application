@@ -176,4 +176,9 @@ const likePost = async (req, res) => {
   }
 };
 
-module.exports = { createPost, deletePost, editPost, fetchPosts, likePost };
+
+// controller to give comments 
+const postComment = async (req , res) =>{
+
+}
+module.exports = { createPost, deletePost, editPost, fetchPosts, likePost , postComment };
