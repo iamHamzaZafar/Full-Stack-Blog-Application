@@ -1,4 +1,5 @@
 const Post = require("../models/Post.model");
+const fs = require('fs');
 const { uploadOnCloudinary } = require("../utils/cloudinary.config");
 const { deleteFromCloudinary } = require("../utils/cloudinary.config");
 
@@ -78,45 +79,50 @@ const deletePost = async (req, res) => {
 
 // controller to edit the post.
 const editPost = async (req, res) => {
+  console.log("Req received");
   const { title, description, details } = req.body;
   const postId = req.params.id;
+
   try {
-    const post = Post.findById(postId);
-    // condition for the post not found.
+    // Find the post by ID
+    const post = await Post.findById(postId);
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
-    // if the post is found check for new image
-    // If a new image is uploaded, handle the Cloudinary image update
+
+    // Handle new image upload if there's a new file
     if (req.file) {
       // Delete the old image from Cloudinary
-      if (post.imagePublicId) {
+      if (post.imageId) {
         await deleteFromCloudinary(post.imageId);
       }
-    }
-    // upload new image to the cloudinary
-    const uploadResponse = await uploadOnCloudinary(req.file.path);
-    if (!uploadResponse) {
-      // Handle case if image upload fails
-      return res.status(500).json({ message: "Image upload failed." });
-    }
-    const imageUrl = uploadResponse.url;
-    const imagePublicId = uploadResponse.public_id;
 
-    // add new data inside the post ;
-    post.image = imageUrl;
-    post.imageId = imagePublicId;
+      // Upload new image to Cloudinary
+      const uploadResponse = await uploadOnCloudinary(req.file.path);
+      if (!uploadResponse) {
+        return res.status(500).json({ message: "Image upload failed." });
+      }
+
+      // Update image URL and public ID in post
+      post.image = uploadResponse.secure_url;
+      post.imageId = uploadResponse.public_id;
+
+      // Delete the local file after uploading
+     
+    }
+
+    // Update other fields
     post.title = title || post.title;
     post.description = description || post.description;
     post.details = details || post.details;
 
-    // save all the data inside the database
+    // Save the updated post to the database
     await post.save();
+
+    res.status(200).json({ message: "Post updated successfully", post });
   } catch (error) {
     console.error("Error editing post:", error);
-    res
-      .status(500)
-      .json({ message: "Error editing post", error: error.message });
+    res.status(500).json({ message: "Error editing post", error: error.message });
   }
 };
 
