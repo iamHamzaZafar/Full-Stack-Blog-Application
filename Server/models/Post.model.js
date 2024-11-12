@@ -29,14 +29,19 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    likes: [{
-      type: Schema.Types.ObjectId,
-      ref:"User"
-    }], // array of users id.
-    comments: [{
-      type: Schema.Types.ObjectId,
-      ref:"User"
-    }]
+    likes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ], // array of users id.
+    comments: [
+      {
+        userId: { type: Schema.Types.ObjectId, ref: "User" },
+        text: String,
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -162,12 +162,10 @@ const likePost = async (req, res) => {
     // first time likng the post
     post.likes.push(req.user.userId);
     await post.save();
-    res
-      .status(200)
-      .json({
-        message: "Post liked successfully",
-        likesCount: post.likes.length,
-      });
+    res.status(200).json({
+      message: "Post liked successfully",
+      likesCount: post.likes.length,
+    });
   } catch (error) {
     console.error("Error liking post:", error);
     res
@@ -176,9 +174,48 @@ const likePost = async (req, res) => {
   }
 };
 
+// controller to give comments
+const postComment = async (req, res) => {
+  const postId = req.params.id;
+  console.log("postId", postId);
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    // post found.
+    const { text } = req.body;
+    console.log("req body is", req.body);
+    console.log("Post is ", post);
+    console.log(" text is :", text);
+    if (!text) {
+      return res.status(400).json({ message: "Comment text is required" });
+    }
 
-// controller to give comments 
-const postComment = async (req , res) =>{
+    const comment = {
+      userId: req.user.userId,
+      text: text,
+    };
 
-}
-module.exports = { createPost, deletePost, editPost, fetchPosts, likePost , postComment };
+    // add this comment to the post field.
+    post.comments.push(comment);
+    await post.save();
+    res
+      .status(201)
+      .json({ message: "Comment added successfully", comments: post.comments });
+  } catch (error) {
+    console.error("Error adding comment:", error);
+    res
+      .status(500)
+      .json({ message: "Error adding comment", error: error.message });
+  }
+};
+
+module.exports = {
+  createPost,
+  deletePost,
+  editPost,
+  fetchPosts,
+  likePost,
+  postComment,
+};
