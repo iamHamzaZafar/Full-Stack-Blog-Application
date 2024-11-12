@@ -177,17 +177,20 @@ const likePost = async (req, res) => {
 // controller to give comments
 const postComment = async (req, res) => {
   const postId = req.params.id;
-  console.log("postId", postId);
+  console.log("Post ID:", postId );
+  
   try {
     const post = await Post.findById(postId);
+    console.log("post " , post) ;
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
-    // post found.
+
+    // Debugging: Log request body and parsed text
     const { text } = req.body;
-    console.log("req body is", req.body);
-    console.log("Post is ", post);
-    console.log(" text is :", text);
+    console.log("Request body:", req.body);
+    console.log("Text extracted:", text);
+
     if (!text) {
       return res.status(400).json({ message: "Comment text is required" });
     }
@@ -197,19 +200,16 @@ const postComment = async (req, res) => {
       text: text,
     };
 
-    // add this comment to the post field.
     post.comments.push(comment);
     await post.save();
-    res
-      .status(201)
-      .json({ message: "Comment added successfully", comments: post.comments });
+    res.status(201).json({ message: "Comment added successfully", comments: post.comments });
+    
   } catch (error) {
     console.error("Error adding comment:", error);
-    res
-      .status(500)
-      .json({ message: "Error adding comment", error: error.message });
+    res.status(500).json({ message: "Error adding comment", error: error.message });
   }
 };
+
 
 module.exports = {
   createPost,

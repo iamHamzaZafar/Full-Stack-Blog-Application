@@ -20,5 +20,4 @@ router.post('/like-post/:id' , isAuthenticated , likePost) ;
 // router to comment on the post.
 router.post('/comment/:id' , isAuthenticated , postComment)
 
-
 module.exports = router ;
